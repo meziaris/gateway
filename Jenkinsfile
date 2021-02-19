@@ -3,7 +3,7 @@ pipeline {
     agent any
         
     stages {
-        stage('Sonarqube Analysis.'){
+        stage('Sonarqube Analysis'){
             steps {
                 sh 'mvn sonar:sonar -Dsonar.projectKey=gateway -Dsonar.host.url=https://sonar.mezi.space -Dsonar.login=4293fbc64f730c76ed633c4c123f3c6506bba536'
             }
