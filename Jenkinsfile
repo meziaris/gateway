@@ -8,9 +8,19 @@ pipeline {
                 sh 'mvn sonar:sonar -Dsonar.projectKey=gateway -Dsonar.host.url=https://sonar.mezi.space -Dsonar.login=4293fbc64f730c76ed633c4c123f3c6506bba536'
             }
         }
+        stage('MVN Install'){
+            steps {
+                sh """
+                mvn clean install -DskipTests
+                """
+            }
+        }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t meziaris/gateway:$BUILD_NUMBER .'
+                sh """
+                sed -i 's/latest/$BUILD_NUMBER/g' docker-compose.yml
+                docker build -t meziaris/gateway:$BUILD_NUMBER .
+                """
             }
         }
         stage('Push Image to DockerHub') {
