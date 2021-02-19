@@ -10,10 +10,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh """
-                sed -i 's/latest/$BUILD_NUMBER/g' docker-compose.yml
-                docker build -t meziaris/gateway:$BUILD_NUMBER .
-                """
+                sh 'docker build -t meziaris/gateway:$BUILD_NUMBER .'
             }
         }
         stage('Push Image to DockerHub') {
@@ -24,13 +21,15 @@ pipeline {
         stage('Deploy to Docker') {
             steps {
                 checkout scm
-                sh 'docker-compose up -d'
+                sh """
+                sed -i 's/latest/$BUILD_NUMBER/g' docker-compose.yml
+                docker-compose up -d
+                """
             }
         }
         stage('Remove docker image last build Dev') {
             steps {
-                sh 'docker rmi swadharma/gateway:$BUILD_NUMBER'
-                sh 'docker rmi swadharma/gateway:latest'
+                sh 'docker rmi meziaris/gateway:$BUILD_NUMBER'
             }
         }
         stage('Git') {
