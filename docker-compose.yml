@@ -8,4 +8,4 @@ services:
       PROFILES: docker
       PORT: 8080
     ports:
-      - "8181:8080"
+      - "8182:8080"
