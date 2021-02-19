@@ -18,7 +18,7 @@ pipeline {
                 sh 'docker build -t meziaris/gateway:$BUILD_NUMBER .'
             }
         }
-        stage('Push Image to Docker hub') {
+        stage('Push Image to DockerHub') {
             steps {
 				sh 'docker push meziaris/gateway:$BUILD_NUMBER'
             }
