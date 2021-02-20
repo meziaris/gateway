@@ -3,9 +3,21 @@ pipeline {
     agent any
         
     stages {
-        stage('Sonarqube Analysis'){
+        stage('Sonarqube Analysis') {
+            environment {
+                scannerHome = tool 'SonarQubeScanner'
+            }
             steps {
-                sh 'mvn sonar:sonar -Dsonar.projectKey=gateway -Dsonar.host.url=https://sonar.mezi.space -Dsonar.login=4293fbc64f730c76ed633c4c123f3c6506bba536'
+                withSonarQubeEnv('sonar-server') {
+                    sh "mvn sonar:sonar -Dsonar.projectKey=gateway"
+                }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         // stage('Build Docker Image') {
